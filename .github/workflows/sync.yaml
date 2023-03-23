@@ -1,0 +1,24 @@
+name: "Validate Petstore's OpenAPI spec is in sync"
+permissions:
+  contents: read
+  pull-requests: write
+on:
+  push: {}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Petstore's latest OpenAPI
+        run: |
+          set -o pipefail
+          gh api /repos/deepmap/oapi-codegen/contents/examples/petstore-expanded/petstore-expanded.yaml --template '{{ .content }}' | base64 -d > head.yaml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "Is Petstore's OpenAPI up-to-date?"
+        run: |
+          git diff --color --no-index petstore.yaml head.yaml || \
+            echo "::warning file=petstore.yaml::File is out-of-sync with upstream repo"

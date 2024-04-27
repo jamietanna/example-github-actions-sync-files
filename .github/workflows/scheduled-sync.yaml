@@ -15,6 +15,7 @@ jobs:
       remote_path: examples/petstore-expanded/petstore-expanded.yaml
       local_path: petstore.yaml
     secrets:
+      # as this is a public repo, we can sync it easily with the inbuilt token
       cross_repo_github_token: ${{ secrets.GITHUB_TOKEN }}
 
     # runs-on: ubuntu-latest

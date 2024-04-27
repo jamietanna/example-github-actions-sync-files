@@ -8,7 +8,7 @@ on:
   # NOTE that this would ideally be done in a schedule
 jobs:
   sync-petstore:
-    uses: .github/workflows/reusable-sync-file.yml
+    uses: ./.github/workflows/reusable-sync-file.yml
     with:
       identifier: oapi-codegen-petstore
       remote_slug: deepmap/oapi-codegen

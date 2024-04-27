@@ -16,22 +16,28 @@ jobs:
       local_path: petstore.yaml
     secrets:
       # as this is a public repo, we can sync it easily with the inbuilt token
+      # however, note that your TODO https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests
       cross_repo_github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    # runs-on: ubuntu-latest
-    # steps:
-    #   - name: Checkout repository
-    #     uses: actions/checkout@v3
-    #
-    #   - name: Fetch Petstore's latest OpenAPI
-    #     run: |
-    #       set -o pipefail
-    #       gh api /repos/deepmap/oapi-codegen/contents/ --template '{{ .content }}' | base64 -d > head.yaml
-    #     env:
-    #       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #
-    #   - name: "Is Petstore's OpenAPI up-to-date?"
-    #     run: |
-    #       git diff --color --no-index petstore.yaml head.yaml || \
-    #         echo "::warning file=petstore.yaml::File is out-of-sync with upstream repo"
-    #
+  # and for a private repo that has two specs in it
+  sync-private-admin-api:
+    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@feature/sync-files
+    with:
+      identifier: private-admin-api
+      remote_slug: jamietanna/example-github-actions-sync-files-private
+      remote_path: api/admin-api.yml
+      local_path: admin-api.yml
+    secrets:
+      # this requires a PAT
+      cross_repo_github_token: ${{ secrets.PAT }}
+
+  sync-private-another-api:
+    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@feature/sync-files
+    with:
+      identifier: private-another-api
+      remote_slug: jamietanna/example-github-actions-sync-files-private
+      remote_path: api/another-api.yml
+      local_path: another-api.yml
+    secrets:
+      # this requires a PAT
+      cross_repo_github_token: ${{ secrets.PAT }}

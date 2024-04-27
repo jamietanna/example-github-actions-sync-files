@@ -1,4 +1,4 @@
-name: "Validate Petstore's OpenAPI spec is in sync"
+name: "Update OpenAPI specifications and raise PRs if changes needed"
 permissions:
   contents: write
   pull-requests: write

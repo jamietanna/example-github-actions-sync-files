@@ -1,6 +1,6 @@
 name: "Validate Petstore's OpenAPI spec is in sync"
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 on:
   push: {}

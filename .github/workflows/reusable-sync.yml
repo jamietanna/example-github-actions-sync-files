@@ -1,0 +1,72 @@
+name: "Determine if a vendored file is out-of-sync and if so, raise a PR to update it"
+permissions:
+  contents: write
+  pull-requests: write
+on:
+  workflow_call:
+    inputs:
+      identifier:
+        type: string
+        description: This will be used as the branch name
+        required: true
+      remote_slug:
+        type: string
+        description: The org/repo slug i.e. `deepmap/oapi-codegen`
+        required: true
+      remote_ref:
+        type: string
+        description: The committish reference i.e. `HEAD`, `main`, `v1.2.3` or a commit hash
+        default: HEAD
+      remote_path:
+        type: string
+        description: The location within the remote repository that the file is
+        required: true
+      local_path:
+        type: string
+        description: The location within the local repository that the file is
+        required: true
+    secrets:
+      cross_repo_github_token:
+        required: true
+        description: The GITHUB_TOKEN that should be used to retrieve the remote location's speification
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: "Fetch the latest version of ${{ inputs.identifier }}'s copy of `${{ inputs.remote_path }}` (from ${{ inputs.remote_ref }})"
+        id: fetch-remote
+        run: |
+          set -o pipefail
+          gh api /repos/${{ inputs.remote_slug }}/contents/${{ inputs.remote_ref }}/examples/petstore-expanded/petstore-expanded.yaml --template '{{ .content }}' | base64 -d > "/tmp/${{ inputs.identifier}}-remote-copy-${{ inputs.remote_ref }}"
+          echo "filename=/tmp/${{ inputs.identifier}}-remote-copy-${{ inputs.remote_ref }}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.cross_repo_github_token }}
+
+      - name: "Is the latest version of ${{ inputs.identifier }}'s copy of `${{ inputs.remote_path }}` (from ${{ inputs.remote_ref }}) out of sync with our copy in `${{ inputs.local_path }}`?"
+        id: needs-sync
+        run: |
+          git diff --color --no-index ${{ steps.fetch-remote.outputs.filename }} ${{ inputs.local_path }} || \
+            echo "needs_sync=true" >> "$GITHUB_OUTPUT"
+
+          # then overwrite it, so it's ready to raise a PR if needed
+          cp ${{ steps.fetch-remote.outputs.filename }} ${{ inputs.local_path }}
+
+      - name: "Raise PR if changes needed"
+        if: ${{ steps.needs-sync.outputs.needs_sync }} == "true"
+        # TODO remove?
+        # uses: peter-evans/create-pull-request@v6
+        run: |
+          echo hello
+
+
+      # - name: "Sync file"
+      #   if: ${{ steps.fetch
+      #   run: |
+      #     cp ${{ steps.fetch-remote.outputs.filename }} ${{ inputs.local_path }}
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #

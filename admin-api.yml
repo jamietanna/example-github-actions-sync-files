@@ -17,5 +17,7 @@ paths:
                   properties:
                     id:
                       type: string
+                    password:
+                      type: string
                   required:
                     - id

@@ -1,0 +1,9 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - git:
+      commitTitle: sq
+      sha: 25f44ea963efd4762470d5d0ed8be601a39d72cd
+    path: private-apis
+  path: internal
+kind: LockConfig

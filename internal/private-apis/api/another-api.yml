@@ -1,14 +1,12 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Admin API
+  title: Another API
 paths:
-  /users:
+  /foos:
     get:
-      summary: Return all users
       responses:
         '200':
-          description: pet response
           content:
             application/json:
               schema:

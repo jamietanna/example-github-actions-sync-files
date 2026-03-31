@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 jobs:
   sync-petstore:
-    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@feature/sync-files
+    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@4310f84b1024e85d84fa770bb8964bc5c6ed2795 # feature/sync-files
     with:
       identifier: oapi-codegen-petstore
       remote_slug: deepmap/oapi-codegen
@@ -21,7 +21,7 @@ jobs:
 
   # and for a private repo that has two specs in it
   sync-private-admin-api:
-    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@feature/sync-files
+    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@4310f84b1024e85d84fa770bb8964bc5c6ed2795 # feature/sync-files
     with:
       identifier: private-admin-api
       remote_slug: jamietanna/example-github-actions-sync-files-private
@@ -32,7 +32,7 @@ jobs:
       cross_repo_github_token: ${{ secrets.PAT }}
 
   sync-private-another-api:
-    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@feature/sync-files
+    uses: jamietanna/actions/.github/workflows/reusable-sync-file.yml@4310f84b1024e85d84fa770bb8964bc5c6ed2795 # feature/sync-files
     with:
       identifier: private-another-api
       remote_slug: jamietanna/example-github-actions-sync-files-private
